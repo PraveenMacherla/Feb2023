@@ -1,0 +1,45 @@
+{
+	"name": "AzureSqlTable_KRMDestination",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "sno",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Column_2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Column_3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Column_4",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Column_5",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InsertedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "karimnagar_destination"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

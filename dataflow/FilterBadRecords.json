@@ -1,0 +1,152 @@
+{
+	"name": "FilterBadRecords",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText3",
+						"type": "DatasetReference"
+					},
+					"name": "HyderbadSalesgoodandbad"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "HyderabadSalesBadData",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "HyderabadSalesGoodRecords",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "HyderabadSalesGoodRecords",
+						"type": "DatasetReference"
+					},
+					"name": "AddingDateColumn"
+				}
+			],
+			"transformations": [
+				{
+					"name": "split1"
+				},
+				{
+					"name": "DateConvertion"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          sno as string,",
+				"          ProductName as string,",
+				"          Location as string,",
+				"          size as string,",
+				"          StoreName as string,",
+				"          Date as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> HyderbadSalesgoodandbad",
+				"HyderbadSalesgoodandbad split((!isInteger(sno, '') || (!isDate(Date, 'MM-dd-yyyy') && !isNull(Date))),",
+				"     isNull(Date),",
+				"     disjoint: false) ~> split1@(BadRecords, GoodRecordsWithOutdate, GoodRecords)",
+				"split1@GoodRecords cast(output(",
+				"          Date as date 'MM-dd-yyyy'",
+				"     ),",
+				"     errors: true) ~> DateConvertion",
+				"split1@GoodRecordsWithOutdate derive(Date = currentTimestamp()) ~> derivedColumn1",
+				"split1@BadRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          sno as string,",
+				"          ProductName as string,",
+				"          Location as string,",
+				"          Size as string,",
+				"          StoreName as string,",
+				"          InsertedDate as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          sno,",
+				"          ProductName,",
+				"          Location,",
+				"          Size = size,",
+				"          StoreName,",
+				"          InsertedDate = Date",
+				"     )) ~> sink1",
+				"DateConvertion sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          sno as integer,",
+				"          ProductName as string,",
+				"          Location as string,",
+				"          Size as string,",
+				"          StoreName as string,",
+				"          InsertedDate as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          sno,",
+				"          ProductName,",
+				"          Location,",
+				"          Size = size,",
+				"          StoreName,",
+				"          InsertedDate = Date",
+				"     )) ~> sink2",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          sno as integer,",
+				"          ProductName as string,",
+				"          Location as string,",
+				"          Size as string,",
+				"          StoreName as string,",
+				"          InsertedDate as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          sno,",
+				"          ProductName,",
+				"          Location,",
+				"          Size = size,",
+				"          StoreName,",
+				"          InsertedDate = Date",
+				"     )) ~> AddingDateColumn"
+			]
+		}
+	}
+}

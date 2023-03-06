@@ -1,0 +1,47 @@
+{
+	"name": "02 sp",
+	"properties": {
+		"activities": [
+			{
+				"name": "Storedprocedure3",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "cloud",
+						"value": "3"
+					}
+				],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[uspLogError]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"cloud": {
+				"type": "string",
+				"defaultValue": "dataname"
+			}
+		},
+		"variables": {
+			"cloud": {
+				"type": "String",
+				"defaultValue": "dataname"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-12-16T00:30:23Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

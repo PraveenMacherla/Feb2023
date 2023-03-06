@@ -1,0 +1,9 @@
+{
+	"name": "clothingadf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f3414fde-df9d-426a-8a2b-d1b6784e74d6",
+		"tenantId": "e6492363-d837-4f4f-819a-2f628fae5d35"
+	}
+}
